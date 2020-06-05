@@ -3,7 +3,7 @@ module.exports = (config) => {
     const data = require('../../resources/data.json');
     const mongoose = require("mongoose");
 
-    mongoose.connect(`${config.driver}://${config.host}:${config.port}/${config.database}`,
+    mongoose.connect(`${config.driver}://${config.host}:${config.port}/${config.database}?retryWrites=false`,
         {
             useUnifiedTopology: true,
             useNewUrlParser: true,
@@ -26,9 +26,12 @@ module.exports = (config) => {
     });
 
     const database = {};
+    database.mongoose = mongoose;
     if (config.createDrop) mongoose.connection.dropDatabase(config.database);
     database.warehouses = require("./warehouses.model")(mongoose, mongoose.Schema, mongoose.model);
-    database.warehouses.insertMany(data, (err) => {err ? console.log(strings.DATABASE_SEED_ERR) : console.log(strings.DATABASE_SEED)});
+    database.warehouses.insertMany(data, (err) => {
+        err ? console.log(strings.DATABASE_SEED_ERR) : console.log(strings.DATABASE_SEED)
+    });
 
     module.exports = database;
 };
