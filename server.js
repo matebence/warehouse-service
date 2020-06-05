@@ -1,3 +1,4 @@
+const hateoasLinker = require('express-hateoas-links');
 const node = require('./resources/bootstrap');
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -8,6 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(hateoasLinker);
 app.use(helmet());
 
 const config = {

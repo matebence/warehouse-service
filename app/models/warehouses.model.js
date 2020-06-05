@@ -15,6 +15,6 @@ module.exports = (mongoose, schema, model) => {
                 type: String
             }
         },
-        {collection: "warehouses", timestamps: { createdAt: 'created_at' }}
+        {collection: "warehouses", timestamps: { createdAt: 'createdAt' }}
     ).plugin(mongooseDelete, { deletedAt : true }));
 };
