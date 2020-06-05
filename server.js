@@ -10,8 +10,18 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(helmet());
 
-require("./app/routes/warehouses.routes")(app);
+const config = {
+    createDrop: true,
+    driver: 'mongodb',
+    database: 'warehouse_service',
+    user: 'wrh_user',
+    password: '9271d726a612749267d1926c8c4c7fc8',
+    host: '192.168.99.100',
+    port: 27017
+};
 
+require("./app/models")(config);
+require("./app/routes/warehouses.routes")(app);
 require("./app/routes/errors.routes")(app);
 
 app.listen(node.server.port, () => {

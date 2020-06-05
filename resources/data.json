@@ -1,0 +1,20 @@
+[
+  {
+    "regions": [2, 4 ,7],
+    "name": "WH 1",
+    "country": "Slovakia",
+    "address": "Trnava, Mostná 25"
+  },
+  {
+    "regions": [1, 6, 8],
+    "name": "WH 2",
+    "country": "Slovakia",
+    "address": "Banská Bystrica, MR Štefánika 1"
+  },
+  {
+    "regions": [3, 5],
+    "name": "WH 3",
+    "country": "Slovakia",
+    "address": "Košice, Štúrova 1A"
+  }
+]

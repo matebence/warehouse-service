@@ -1,4 +1,7 @@
 const strings = require('../../resources/strings');
+const database = require("../models");
+
+const Warehouses = database.warehouses;
 
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE_NUMBER = 1;
@@ -44,7 +47,6 @@ exports.get = {
         next()
     },
     validate: [
-            next()
     ],
     inDatabase: (req, res, next) => {
     }
