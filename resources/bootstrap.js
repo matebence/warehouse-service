@@ -1,6 +1,6 @@
 module.exports = {
     application: {
-        name: "warehouses-service"
+        name: "warehouse-service"
     },
     cloud: {
         config: {
