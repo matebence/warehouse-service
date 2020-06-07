@@ -3,11 +3,12 @@ module.exports = (app, config) => {
     const Eureka = require('eureka-js-client').Eureka;
     const eureka = {
         instance: {
-            hostName: require('os').hostname(),
             app: config.bootstrap.application.name.toUpperCase(),
-            vipAddress: config.bootstrap.application.name,
-            instanceId: `${require('os').hostname()}:${config.bootstrap.application.name}:${config.bootstrap.server.port}`,
+            hostName: require('os').hostname(),
             ipAddr: require('ip').address(),
+            instanceId: `${require('os').hostname()}:${config.bootstrap.application.name}:${config.bootstrap.server.port}`,
+            statusPageUrl: `http://${config.bootstrap.application.name}:${config.bootstrap.server.port}`,
+            vipAddress: config.bootstrap.application.name,
             status: "UP",
             port: {
                 $: config.bootstrap.server.port,
