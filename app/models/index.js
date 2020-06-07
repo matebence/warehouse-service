@@ -7,6 +7,7 @@ module.exports = (config) => {
         {
             useUnifiedTopology: true,
             useNewUrlParser: true,
+            useFindAndModify: false,
             auth: {
                 authSource: "admin"
             },
