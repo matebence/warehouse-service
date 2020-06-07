@@ -3,16 +3,22 @@ module.exports = (mongoose, schema, model) => {
     return model("warehouses", new schema(
         {
             regions: {
-                type: Array
+                type: Array,
+                required: true,
+                unique: true
             },
             name: {
-                type: String
+                type: String,
+                required: true,
+                unique: true
             },
             country: {
-                type: String
+                type: String,
+                required: true
             },
             address: {
-                type: String
+                type: String,
+                required: true
             }
         },
         {collection: "warehouses", timestamps: { createdAt: 'createdAt' }}
