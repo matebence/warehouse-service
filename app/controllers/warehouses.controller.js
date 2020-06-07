@@ -103,7 +103,7 @@ exports.delete = {
     },
     validate: [
         check('id')
-            .isInt({min: 1}).withMessage(strings.WAREHOUSE_ID_INT),
+            .isMongoId({min: 1}).withMessage(strings.WAREHOUSE_MONGO_ID),
 
         (req, res, next) => {
             const errors = validationResult(req);
@@ -174,7 +174,7 @@ exports.update = {
     },
     validate: [
         check('id')
-            .isInt({min: 1}).withMessage(strings.WAREHOUSE_ID_INT),
+            .isMongoId({min: 1}).withMessage(strings.WAREHOUSE_MONGO_ID),
         check('regions')
             .isInt().withMessage(strings.WAREHOUSE_REGIONS_INT),
         check('name')
@@ -250,7 +250,7 @@ exports.get = {
     },
     validate: [
         check('id')
-            .isInt({min: 1}).withMessage(strings.WAREHOUSE_ID_INT),
+            .isMongoId({min: 1}).withMessage(strings.WAREHOUSE_MONGO_ID),
 
         (req, res, next) => {
             const errors = validationResult(req);

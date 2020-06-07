@@ -24,7 +24,7 @@ module.exports = {
     WAREHOUSE_COUNTRY_ALPHA: `Nesprávný formát názov štátu`,
     WAREHOUSE_ADDRESS_LENGHT: `Minimálna dlžka adresi je 3 a maximalná je 64`,
     WAREHOUSE_ADDRESS_MATCHES: `Nesprávný formát adresi`,
-    WAREHOUSE_ID_INT: `Nesprávný formát identifikacného čísla`,
+    WAREHOUSE_MONGO_ID: `Nesprávný formát identifikacného čísla`,
     WAREHOUSE_PAGE_NUMBER_INT: `Nesprávný formát číslo strany`,
     WAREHOUSE_PAGE_SIZE_INT: `Nesprávný formát veľkosť strany`,
     WAREHOUSE_UNIQUE: `Sklad s údajmi sa už nachádza v databáze`,
