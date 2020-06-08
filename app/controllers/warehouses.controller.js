@@ -103,7 +103,7 @@ exports.delete = {
     },
     validate: [
         check('id')
-            .isMongoId({min: 1}).withMessage(strings.WAREHOUSE_MONGO_ID),
+            .isMongoId().withMessage(strings.WAREHOUSE_MONGO_ID),
 
         (req, res, next) => {
             const errors = validationResult(req);
@@ -174,7 +174,7 @@ exports.update = {
     },
     validate: [
         check('id')
-            .isMongoId({min: 1}).withMessage(strings.WAREHOUSE_MONGO_ID),
+            .isMongoId().withMessage(strings.WAREHOUSE_MONGO_ID),
         check('regions')
             .isInt().withMessage(strings.WAREHOUSE_REGIONS_INT),
         check('name')
@@ -250,7 +250,7 @@ exports.get = {
     },
     validate: [
         check('id')
-            .isMongoId({min: 1}).withMessage(strings.WAREHOUSE_MONGO_ID),
+            .isMongoId().withMessage(strings.WAREHOUSE_MONGO_ID),
 
         (req, res, next) => {
             const errors = validationResult(req);
@@ -274,7 +274,7 @@ exports.get = {
                     session.endSession();
                     return res.status(200).json(data, [
                         {rel: "self", method: "GET", href: req.protocol + '://' + req.get('host') + req.originalUrl},
-                        {rel: "all-warehouses", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${DEFAULT_PAGE_NUMBER}/${DEFAULT_PAGE_SIZE}`}]);
+                        {rel: "all-warehouses", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${DEFAULT_PAGE_NUMBER}/limit/${DEFAULT_PAGE_SIZE}`}]);
                 });
             } else {
                 session.abortTransaction().then(() => {
@@ -338,7 +338,7 @@ exports.getAll = {
                     session.endSession();
                     return res.status(206).json({data}, [
                         {rel: "self", method: "GET", href: req.protocol + '://' + req.get('host') + req.originalUrl},
-                        {rel: "next-range", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${1 + Number(req.params.pageNumber)}/${req.params.pageSize}`}]);
+                        {rel: "next-range", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${1 + Number(req.params.pageNumber)}/limit/${req.params.pageSize}`}]);
                 });
             } else {
                 session.abortTransaction().then(() => {
@@ -387,8 +387,9 @@ exports.search = {
     },
     inDatabase: (req, res, next) => {
         const pagination = req.body.pagination;
-        const order = req.body.orderBy;
-        const search = req.body.search;
+        let order = req.body.orderBy;
+        let search = req.body.search;
+        let hateosLinks = [];
 
         if (order) {
             Object.keys(order).map(function (key, index) {
@@ -404,14 +405,18 @@ exports.search = {
                 search[key] = {$regex: new RegExp("^.*" + search[key] + '.*', "i")}
             });
         }
+        Warehouses.countDocuments({deleted: false, ...search}, (err, count) => {
+            hateosLinks.push({rel: "self", method: "GET", href: req.protocol + '://' + req.get('host') + req.originalUrl});
+            if (Number(pagination.pageNumber) > 1) hateosLinks.push({rel: "has-prev", method: "POST", href: `${req.protocol}://${req.get('host')}/api/warehouses/search`});
+            if ((Number(pagination.pageNumber) * Number(pagination.pageSize)) < count) hateosLinks.push({rel: "has-next", method: "POST", href: `${req.protocol}://${req.get('host')}/api/warehouses/search`});
+        });
+
         return Promise.all([Warehouses.startSession(), Warehouses.find({deleted: false, ...search}).sort(order).skip((Number(pagination.pageNumber) - 1) * Number(pagination.pageSize)).limit(Number(pagination.pageSize))]).then(([session, data]) => {
             session.startTransaction();
             if (data.length > 0 || data !== undefined) {
                 session.commitTransaction().then(() => {
                     session.endSession();
-                    return res.status(200).json({data}, [
-                        {rel: "self", method: "GET", href: req.protocol + '://' + req.get('host') + req.originalUrl},
-                        {rel: "next-range", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${1 + Number(req.params.pageNumber)}/${req.params.pageSize}`}]);
+                    return res.status(200).json({data}, hateosLinks);
                 });
             } else {
                 session.abortTransaction().then(() => {
