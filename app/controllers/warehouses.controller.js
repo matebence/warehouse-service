@@ -202,7 +202,7 @@ exports.update = {
         }
     ],
     inDatabase: (req, res, next) => {
-        return Promise.all([Warehouses.startSession(), Warehouses.findByIdAndUpdate(req.params.id, req.body)]).then(([session, data]) => {
+        return Promise.all([Warehouses.startSession(), Warehouses.findOneAndUpdate({_id: req.params.id}, req.body)]).then(([session, data]) => {
             session.startTransaction();
             if (data) {
                 session.commitTransaction().then(() => {

@@ -4,6 +4,7 @@
     <list default="true" id="66394140-6d9e-432f-b6c1-2e3c2155cdd5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/warehouses.controller.js" afterPath="$PROJECT_DIR$/app/controllers/warehouses.controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/warehouses.model.js" afterPath="$PROJECT_DIR$/app/models/warehouses.model.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -36,6 +37,7 @@
       <find>rel</find>
       <find>isMongo</find>
       <find>COU</find>
+      <find>.update</find>
     </findStrings>
     <replaceStrings>
       <replace>_WAREHOUSES</replace>
@@ -47,7 +49,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/models/warehouses.model.js" />
         <option value="$PROJECT_DIR$/app/validator/isArrayOfIds" />
         <option value="$PROJECT_DIR$/app/routes/auth.routes.js" />
         <option value="$PROJECT_DIR$/package-lock.json" />
@@ -60,6 +61,7 @@
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
         <option value="$PROJECT_DIR$/resources/strings.js" />
         <option value="$PROJECT_DIR$/resources/bootstrap.js" />
+        <option value="$PROJECT_DIR$/app/models/warehouses.model.js" />
         <option value="$PROJECT_DIR$/app/controllers/warehouses.controller.js" />
       </list>
     </option>
@@ -142,7 +144,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
+              <option name="myItemId" value="models" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -297,11 +299,13 @@
       <workItem from="1591608601475" duration="819000" />
       <workItem from="1591641298032" duration="45000" />
       <workItem from="1591641787883" duration="880000" />
+      <workItem from="1591961269744" duration="265000" />
+      <workItem from="1591968368790" duration="5000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29625000" />
+    <option name="totallyTimeSpent" value="29895000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1929" y="-9" width="1938" height="1098" extended-state="6" />
@@ -597,13 +601,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/warehouses.model.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="7" column="28" lean-forward="true" selection-start-line="7" selection-start-column="28" selection-end-line="7" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/models/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -643,7 +640,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="96">
           <caret line="4" column="44" lean-forward="false" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -677,9 +673,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/warehouses.controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="407" column="22" lean-forward="false" selection-start-line="407" selection-start-column="22" selection-end-line="407" selection-end-column="22" />
-          <folding />
+        <state relative-caret-position="121">
+          <caret line="190" column="49" lean-forward="true" selection-start-line="190" selection-start-column="49" selection-end-line="190" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/warehouses.model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="648">
+          <caret line="27" column="2" lean-forward="true" selection-start-line="27" selection-start-column="2" selection-end-line="27" selection-end-column="2" />
         </state>
       </provider>
     </entry>
