@@ -14,5 +14,7 @@ module.exports = app => {
 
     router.post("/search", warehouses.search.authorize, warehouses.search.checkBody, warehouses.search.inDatabase);
 
+    router.post("/join/:columnName", warehouses.join.authorize, warehouses.join.checkBody, warehouses.join.validate, warehouses.join.inDatabase);
+
     app.use('/api/warehouses', router);
 };

@@ -27,5 +27,6 @@ module.exports = {
     WAREHOUSE_MONGO_ID: `Nesprávný formát identifikacného čísla`,
     WAREHOUSE_PAGE_NUMBER_INT: `Nesprávný formát číslo strany`,
     WAREHOUSE_PAGE_SIZE_INT: `Nesprávný formát veľkosť strany`,
-    WAREHOUSE_UNIQUE: `Sklad s údajmi sa už nachádza v databáze`,
+    WAREHOUSE_COLUMN_NAME_MATCHES: `Nesprávný formát názov stľpca`,
+    WAREHOUSE_UNIQUE: `Sklad s údajmi sa už nachádza v databáze`
 };
