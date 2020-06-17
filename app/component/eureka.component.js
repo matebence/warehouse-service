@@ -1,6 +1,6 @@
 module.exports = (app, config) => {
-    const strings = require('../../resources/strings');
     const Eureka = require('eureka-js-client').Eureka;
+
     const eureka = {
         instance: {
             app: config.bootstrap.application.name.toUpperCase(),
