@@ -1,8 +1,10 @@
 const {validationResult, check} = require('express-validator/check');
+const crypto = require('crypto-js');
 
 const strings = require('../../resources/strings');
 const database = require("../models");
 
+const Places = require('../component/resilient.component');
 const Warehouses = database.warehouses;
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -272,9 +274,11 @@ exports.get = {
             if (data) {
                 session.commitTransaction().then(() => {
                     session.endSession();
-                    return res.status(200).json(data, [
+                    req.warehouses = data;
+                    req.hateosLinks = [
                         {rel: "self", method: "GET", href: req.protocol + '://' + req.get('host') + req.originalUrl},
-                        {rel: "all-warehouses", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${DEFAULT_PAGE_NUMBER}/limit/${DEFAULT_PAGE_SIZE}`}]);
+                        {rel: "all-warehouses", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${DEFAULT_PAGE_NUMBER}/limit/${DEFAULT_PAGE_SIZE}`}];
+                    next();
                 });
             } else {
                 session.abortTransaction().then(() => {
@@ -294,6 +298,64 @@ exports.get = {
                 error: true,
                 nav: `${req.protocol}://${req.get('host')}`
             });
+        });
+    },
+    fetchDataFromService: (req, res, next) => {
+        const proxy = Places.resilient("PLACE-SERVICE");
+        const regionIds = req.warehouses.regions;
+
+        proxy.post('/regions/join/id', {data: regionIds}).then(response => {
+            if (response.status >= 300 && !'error' in response.data) return new Error(strings.PROXY_ERR);
+            response.data.forEach(e => {database.redis.setex(crypto.MD5(`places-${e.id}`).toString(), 3600, JSON.stringify(e))});
+
+            const warehouses = [req.warehouses].map(e => {
+                const regions = [];
+                response.data.forEach(x => {
+                   if(e.regions.includes(x.id)){
+                       regions.push({name: x.name, id: x.id});
+                   }
+                });
+                return {...e._doc, regions: regions};
+            }).pop();
+
+            return res.status(200).json(warehouses, req.hateosLinks);
+        }).catch(err => {
+            req.cacheId = regionIds;
+            next();
+        });
+    },
+    fetchDataFromCache: (req, res, next) => {
+        database.redis.mget(req.cacheId.map(e => {return crypto.MD5(`places-${e}`).toString()}), (err, data) => {
+            if (!data) {
+                return res.status(500).json({
+                    timestamp: new Date().toISOString(),
+                    message: strings.WAREHOUSE_NOT_FOUND,
+                    error: true,
+                    nav: `${req.protocol}://${req.get('host')}`
+                });
+            } else {
+                try{
+                    data = JSON.stringify(data.map(e => {return JSON.parse(e)}));
+                    const warehouses = [req.warehouses].map(e => {
+                        const regions = [];
+                        JSON.parse(data).forEach(x => {
+                            if(e.regions.includes(x.id)){
+                                regions.push({name: x.name, id: x.id});
+                            }
+                        });
+                        return {...e._doc, regions: regions};
+                    }).pop();
+
+                    return res.status(200).json(warehouses, req.hateosLinks);
+                } catch(err) {
+                    return res.status(500).json({
+                        timestamp: new Date().toISOString(),
+                        message: strings.WAREHOUSE_NOT_FOUND,
+                        error: true,
+                        nav: `${req.protocol}://${req.get('host')}`
+                    });
+                }
+            }
         });
     }
 };
@@ -336,9 +398,11 @@ exports.getAll = {
             if (data.length > 0 || data !== undefined) {
                 session.commitTransaction().then(() => {
                     session.endSession();
-                    return res.status(206).json({data}, [
+                    req.warehouses = data;
+                    req.hateosLinks = [
                         {rel: "self", method: "GET", href: req.protocol + '://' + req.get('host') + req.originalUrl},
-                        {rel: "next-range", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${1 + Number(req.params.pageNumber)}/limit/${req.params.pageSize}`}]);
+                        {rel: "next-range", method: "GET", href: `${req.protocol}://${req.get('host')}/api/warehouses/page/${1 + Number(req.params.pageNumber)}/limit/${req.params.pageSize}`}];
+                    next();
                 });
             } else {
                 session.abortTransaction().then(() => {
@@ -358,6 +422,65 @@ exports.getAll = {
                 error: true,
                 nav: `${req.protocol}://${req.get('host')}`
             });
+        });
+    },
+    fetchDataFromService: (req, res, next) => {
+        const proxy = Places.resilient("PLACE-SERVICE");
+        let regionIds = req.warehouses.filter(e => e.regions).map(x => x.regions);
+        regionIds = regionIds.reduce((acc, val) => [ ...acc, ...val ], []);
+
+        proxy.post('/regions/join/id', {data: regionIds}).then(response => {
+            if (response.status >= 300 && !'error' in response.data) return new Error(strings.PROXY_ERR);
+            response.data.forEach(e => {database.redis.setex(crypto.MD5(`places-${e.id}`).toString(), 3600, JSON.stringify(e))});
+
+            const warehouses = req.warehouses.map(e => {
+                const regions = [];
+                response.data.forEach(x => {
+                    if(e.regions.includes(x.id)){
+                        regions.push({name: x.name, id: x.id});
+                    }
+                });
+                return {...e._doc, regions: regions};
+            });
+
+            return res.status(206).json({data: warehouses}, req.hateosLinks);
+        }).catch(err => {
+            req.cacheId = regionIds;
+            next();
+        });
+    },
+    fetchDataFromCache: (req, res, next) => {
+        database.redis.mget(req.cacheId.map(e => {return crypto.MD5(`places-${e}`).toString()}), (err, data) => {
+            if (!data) {
+                return res.status(500).json({
+                    timestamp: new Date().toISOString(),
+                    message: strings.WAREHOUSE_NOT_FOUND,
+                    error: true,
+                    nav: `${req.protocol}://${req.get('host')}`
+                });
+            } else {
+                try{
+                    data = JSON.stringify(data.map(e => {return JSON.parse(e)}));
+                    const warehouses = req.warehouses.map(e => {
+                        const regions = [];
+                        JSON.parse(data).forEach(x => {
+                            if(e.regions.includes(x.id)){
+                                regions.push({name: x.name, id: x.id});
+                            }
+                        });
+                        return {...e._doc, regions: regions};
+                    });
+
+                    return res.status(206).json({data: warehouses}, req.hateosLinks);
+                } catch(err) {
+                    return res.status(500).json({
+                        timestamp: new Date().toISOString(),
+                        message: strings.WAREHOUSE_NOT_FOUND,
+                        error: true,
+                        nav: `${req.protocol}://${req.get('host')}`
+                    });
+                }
+            }
         });
     }
 };
@@ -420,7 +543,9 @@ exports.search = {
             if (data.length > 0 || data !== undefined) {
                 session.commitTransaction().then(() => {
                     session.endSession();
-                    return res.status(200).json({data}, hateosLinks);
+                    req.warehouses = data;
+                    req.hateosLinks = hateosLinks;
+                    next();
                 });
             } else {
                 session.abortTransaction().then(() => {
@@ -440,6 +565,65 @@ exports.search = {
                 error: true,
                 nav: `${req.protocol}://${req.get('host')}`
             });
+        });
+    },
+    fetchDataFromService: (req, res, next) => {
+        const proxy = Places.resilient("PLACE-SERVICE");
+        let regionIds = req.warehouses.filter(e => e.regions).map(x => x.regions);
+        regionIds = regionIds.reduce((acc, val) => [ ...acc, ...val ], []);
+
+        proxy.post('/regions/join/id', {data: regionIds}).then(response => {
+            if (response.status >= 300 && !'error' in response.data) return new Error(strings.PROXY_ERR);
+            response.data.forEach(e => {database.redis.setex(crypto.MD5(`places-${e.id}`).toString(), 3600, JSON.stringify(e))});
+
+            const warehouses = req.warehouses.map(e => {
+                const regions = [];
+                response.data.forEach(x => {
+                    if(e.regions.includes(x.id)){
+                        regions.push({name: x.name, id: x.id});
+                    }
+                });
+                return {...e._doc, regions: regions};
+            });
+
+            return res.status(200).json({data: warehouses}, req.hateosLinks);
+        }).catch(err => {
+            req.cacheId = regionIds;
+            next();
+        });
+    },
+    fetchDataFromCache: (req, res, next) => {
+        database.redis.mget(req.cacheId.map(e => {return crypto.MD5(`places-${e}`).toString()}), (err, data) => {
+            if (!data) {
+                return res.status(500).json({
+                    timestamp: new Date().toISOString(),
+                    message: strings.WAREHOUSE_NOT_FOUND,
+                    error: true,
+                    nav: `${req.protocol}://${req.get('host')}`
+                });
+            } else {
+                try{
+                    data = JSON.stringify(data.map(e => {return JSON.parse(e)}));
+                    const warehouses = req.warehouses.map(e => {
+                        const regions = [];
+                        JSON.parse(data).forEach(x => {
+                            if(e.regions.includes(x.id)){
+                                regions.push({name: x.name, id: x.id});
+                            }
+                        });
+                        return {...e._doc, regions: regions};
+                    });
+
+                    return res.status(200).json({data: warehouses}, req.hateosLinks);
+                } catch(err) {
+                    return res.status(500).json({
+                        timestamp: new Date().toISOString(),
+                        message: strings.WAREHOUSE_NOT_FOUND,
+                        error: true,
+                        nav: `${req.protocol}://${req.get('host')}`
+                    });
+                }
+            }
         });
     }
 };

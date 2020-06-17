@@ -28,7 +28,5 @@ module.exports = (app, config) => {
         }
     };
 
-    new Eureka({instance: eureka.instance, eureka: eureka.eureka}).start(result => {
-        console.log(strings.EUREKA_ERR)
-    });
+    module.exports = new Eureka({instance: eureka.instance, eureka: eureka.eureka});
 };
