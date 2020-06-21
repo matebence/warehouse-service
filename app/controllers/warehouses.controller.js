@@ -38,10 +38,10 @@ exports.create = {
             .isInt().withMessage(strings.WAREHOUSE_REGIONS_INT),
         check('name')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_NAME_LENGHT)
-            .isAscii(['sk-SK']).withMessage(strings.WAREHOUSE_NAME_ASCII),
+            .matches(/^[\D ]+\d+$/).withMessage(strings.WAREHOUSE_NAME_MATCHES),
         check('country')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_COUNTRY_LENGHT)
-            .isAlpha(['sk-SK']).withMessage(strings.WAREHOUSE_COUNTRY_ALPHA),
+            .matches(/^[\D ]+$/).withMessage(strings.WAREHOUSE_COUNTRY_MATCHES),
         check('address')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_ADDRESS_LENGHT)
             .matches(/^([^\x00-\x7F]|\w)+, ([^\x00-\x7F]|\w)+ \d*$/).withMessage(strings.WAREHOUSE_ADDRESS_MATCHES),
@@ -181,10 +181,10 @@ exports.update = {
             .isInt().withMessage(strings.WAREHOUSE_REGIONS_INT),
         check('name')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_NAME_LENGHT)
-            .isAscii(['sk-SK']).withMessage(strings.WAREHOUSE_NAME_ASCII),
+            .matches(/^[\D ]+\d+$/).withMessage(strings.WAREHOUSE_NAME_MATCHES),
         check('country')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_COUNTRY_LENGHT)
-            .isAlpha(['sk-SK']).withMessage(strings.WAREHOUSE_COUNTRY_ALPHA),
+            .matches(/^[\D ]+$/).withMessage(strings.WAREHOUSE_COUNTRY_MATCHES),
         check('address')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_ADDRESS_LENGHT)
             .matches(/^([^\x00-\x7F]|\w)+, ([^\x00-\x7F]|\w)+ \d*$/).withMessage(strings.WAREHOUSE_ADDRESS_MATCHES),

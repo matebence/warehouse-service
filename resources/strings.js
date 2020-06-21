@@ -20,9 +20,9 @@ module.exports = {
 
     WAREHOUSE_REGIONS_INT: `Nesprávný formát identifikačného čísla kraja`,
     WAREHOUSE_NAME_LENGHT: `Minimálna dlžka názvu skladu je 3 a maximalná je 64`,
-    WAREHOUSE_NAME_ASCII: `Nesprávný formát názov skladu`,
+    WAREHOUSE_NAME_MATCHES: `Nesprávný formát názov skladu`,
     WAREHOUSE_COUNTRY_LENGHT: `Minimálna dlžka názvu štátu je 3 a maximalná je 64`,
-    WAREHOUSE_COUNTRY_ALPHA: `Nesprávný formát názov štátu`,
+    WAREHOUSE_COUNTRY_MATCHES: `Nesprávný formát názov štátu`,
     WAREHOUSE_ADDRESS_LENGHT: `Minimálna dlžka adresi je 3 a maximalná je 64`,
     WAREHOUSE_ADDRESS_MATCHES: `Nesprávný formát adresi`,
     WAREHOUSE_MONGO_ID: `Nesprávný formát identifikacného čísla`,
