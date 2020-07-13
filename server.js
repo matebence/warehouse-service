@@ -5,7 +5,6 @@ const client = require("cloud-config-client");
 const bodyParser = require('body-parser');
 const express = require('express');
 const helmet = require('helmet');
-const cors = require("cors");
 
 const app = express();
 
@@ -13,7 +12,6 @@ app.use(expressValidator());
 app.use(bodyParser.json());
 app.use(hateoasLinker);
 app.use(helmet());
-app.use(cors());
 
 client.load({
     endpoint: node.cloud.config.uri,
