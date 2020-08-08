@@ -3,4 +3,4 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 COPY . .
-CMD ["./wait-for-it.sh" , "messaging-service:7400" , "--strict" , "--timeout=235" , "--" , "node", "server.js"]
+CMD ["./wait-for-it.sh" , "vehicle-service:5200" , "--strict" , "--timeout=420" , "--" , "node", "server.js"]
