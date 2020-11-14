@@ -12,7 +12,7 @@ const DEFAULT_PAGE_NUMBER = 1;
 
 exports.create = {
     authorize: (req, res, next) => {
-        if (!req.hasRole(['ROLE_SYSTEM', 'ROLE_ADMIN', 'ROLE_MANAGER'])) {
+        if (!req.hasRole(['ROLE_SYSTEM', 'ROLE_ADMIN'])) {
             return res.status(401).json({
                 timestamp: new Date().toISOString(),
                 message: strings.AUTH_ERR,
@@ -38,13 +38,13 @@ exports.create = {
             .isInt().withMessage(strings.WAREHOUSE_REGIONS_INT),
         check('name')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_NAME_LENGHT)
-            .matches(/^[\D ]+\d+$/).withMessage(strings.WAREHOUSE_NAME_MATCHES),
+            .matches(/^[\D 0-9]+\d+$/).withMessage(strings.WAREHOUSE_NAME_MATCHES),
         check('country')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_COUNTRY_LENGHT)
             .matches(/^[\D ]+$/).withMessage(strings.WAREHOUSE_COUNTRY_MATCHES),
         check('address')
             .isLength({min: 3, max: 64}).withMessage(strings.WAREHOUSE_ADDRESS_LENGHT)
-            .matches(/^([^\x00-\x7F]|\w)+, ([^\x00-\x7F]|\w)+ \d*$/).withMessage(strings.WAREHOUSE_ADDRESS_MATCHES),
+            .matches(/^[\D 0-9]+\d+$/).withMessage(strings.WAREHOUSE_ADDRESS_MATCHES),
 
         (req, res, next) => {
             const errors = validationResult(req);
@@ -93,7 +93,7 @@ exports.create = {
 
 exports.delete = {
     authorize: (req, res, next) => {
-        if (!req.hasRole(['ROLE_SYSTEM', 'ROLE_ADMIN', 'ROLE_MANAGER'])) {
+        if (!req.hasRole(['ROLE_SYSTEM', 'ROLE_ADMIN'])) {
             return res.status(401).json({
                 timestamp: new Date().toISOString(),
                 message: strings.AUTH_ERR,
@@ -153,7 +153,7 @@ exports.delete = {
 
 exports.update = {
     authorize: (req, res, next) => {
-        if (!req.hasRole(['ROLE_SYSTEM', 'ROLE_ADMIN', 'ROLE_MANAGER'])) {
+        if (!req.hasRole(['ROLE_SYSTEM', 'ROLE_ADMIN'])) {
             return res.status(401).json({
                 timestamp: new Date().toISOString(),
                 message: strings.AUTH_ERR,
