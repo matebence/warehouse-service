@@ -4,13 +4,11 @@ module.exports = (mongoose, schema, model) => {
         {
             regions: {
                 type: Array,
-                required: true,
-                unique: true
+                required: true
             },
             name: {
                 type: String,
-                required: true,
-                unique: true
+                required: true
             },
             country: {
                 type: String,
