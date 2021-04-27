@@ -35,7 +35,7 @@
     "mongoose": "^5.9.17",
     "mongoose-delete": "^0.5.2",
     "node-fetch": "^2.6.0",
-    "redis": "^3.0.2",
+    "redis": "^3.1.1",
     "resilient": "^0.4.0",
     "zipkin": "^0.21.0",
     "zipkin-context-cls": "^0.21.0",
